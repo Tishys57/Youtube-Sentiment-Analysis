@@ -1,8 +1,13 @@
 Necessary libraries required to run the app:
+
 fastapi
+
 uvicorn
+
 joblib
+
 google-api-python-client
+
 starlette
 
 
