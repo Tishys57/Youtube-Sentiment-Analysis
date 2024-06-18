@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube Comment Analyzer</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <h1>YouTube Comment Analyzer</h1>
+  <div class="container">
+    <div class="input-box">
+      <input type="text" id="comment-url" placeholder="Enter YouTube video URL here">
+      <button type="button" id="submit-btn">Analyze Comments</button>
+    </div>
+    <div id="result-container">
+      <p id="sentiment-percentage"></p>
+      <div class="collapsible-list" id="positive-comments">
+        <button type="button" class="collapsible">Positive Comments</button>
+        <div class="content"></div>
+      </div>
+      <div class="collapsible-list" id="neutral-comments">
+        <button type="button" class="collapsible">Neutral Comments</button>
+        <div class="content"></div>
+      </div>
+      <div class="collapsible-list" id="negative-comments">
+        <button type="button" class="collapsible">Negative Comments</button>
+        <div class="content"></div>
+      </div>
+    </div>
+  </div>
+  <script src="/static/scrpit.js"></script>
+</body>
+</html>
