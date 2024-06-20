@@ -3,6 +3,7 @@ import os
 import joblib
 import googleapiclient.discovery
 from collections import Counter
+import html
 
 # Replace 'YOUR_API_KEY_HERE' with your actual YouTube Data API key
 API_KEY = 'AIzaSyD_hodyDC5UDFoJrlcFQs0EeLq2E93VR-M'
@@ -29,6 +30,7 @@ def get_comments(video_id):
         response = request.execute()
         for item in response['items']:
             comment = item['snippet']['topLevelComment']['snippet']['textDisplay']
+            comment = html.unescape(comment)  # Decode HTML entities
             comments.append([comment])
         
         if 'nextPageToken' in response:
@@ -54,8 +56,7 @@ def predict_sentiment(comments, model):
     texts = [comment[0] for comment in comments]
     sentiments = model.predict(texts)
     comments_with_sentiment = [(comments[i][0], sentiment) for i, sentiment in enumerate(sentiments)]
-    # Sort comments by sentiment (positive, neutral, negative)
-    comments_with_sentiment.sort(key=lambda x: x[1])  # Sort by sentiment (assuming 'positive', 'neutral', 'negative')
+    # Return unsorted comments with sentiment for immediate display
     return comments_with_sentiment
 
 def calculate_sentiment_percentage(comments_with_sentiment):
@@ -99,7 +100,7 @@ if __name__ == "__main__":
     # Load the logistic regression sentiment analysis model
     model = joblib.load('logistic_regression_model.joblib')
 
-    # Predict the sentiment of the comments and sort by sentiment
+    # Predict the sentiment of the comments and return unsorted
     comments_with_sentiment = predict_sentiment(comments, model)
 
     # Write the comments with sentiment to a CSV file

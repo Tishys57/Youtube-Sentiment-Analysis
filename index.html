@@ -4,7 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>YouTube Comment Analyzer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="/static/style.css">
+  <style>
+    #loading-indicator {
+      display: none;
+      font-size: 18px;
+      color: black;
+    }
+    .collapsible-list {
+      display: none;
+    }
+  </style>
 </head>
 <body>
   <h1>YouTube Comment Analyzer</h1>
@@ -14,6 +25,7 @@
       <button type="button" id="submit-btn">Analyze Comments</button>
     </div>
     <div id="result-container">
+      <p class="fa fa-spinner fa-spin" id = "loading-indicator" style="display: none;"></p>
       <p id="sentiment-percentage"></p>
       <div class="collapsible-list" id="positive-comments">
         <button type="button" class="collapsible">Positive Comments</button>
@@ -27,8 +39,45 @@
         <button type="button" class="collapsible">Negative Comments</button>
         <div class="content"></div>
       </div>
+      <button type="button" id="download-btn">Download CSV</button>
     </div>
   </div>
-  <script src="/static/scrpit.js"></script>
+  <script src="/static/script.js"></script>
+  <script>
+    document.getElementById('submit-btn').addEventListener('click', function() {
+      var videoUrl = document.getElementById('comment-url').value.trim();
+      if (videoUrl === '') {
+        alert('Please enter a YouTube video URL.');
+        return;
+      }
+
+      // Show loading indicator
+      document.getElementById('loading-indicator').style.display = 'block';
+
+      fetch('/analyze', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ video_url: videoUrl })
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Hide loading indicator
+        document.getElementById('loading-indicator').style.display = 'none';
+
+        if (data.error) {
+          alert(data.error);
+        } else {
+          displaySentimentPercentage(data.sentiment_percentage);
+          displayComments(data.comments);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred during analysis.');
+      });
+    });
+  </script>
 </body>
 </html>
